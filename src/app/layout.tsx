@@ -33,7 +33,7 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} ${baloo.variable} ${roboto.className}`}
       >
-        <div className="max-w-[1440px]">
+        <div className="mx-auto max-w-[1440px]">
           <Header />
           {children}
         </div>

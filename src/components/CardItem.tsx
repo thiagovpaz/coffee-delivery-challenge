@@ -14,7 +14,7 @@ const CardItem: React.FC<CardItemProps> = ({ coffee }) => {
   const { image, categories, name, description, price } = coffee;
 
   return (
-    <div className="relative flex flex-col rounded-bl-3xl rounded-tl-md rounded-tr-3xl bg-gray-200 p-5">
+    <div className="relative flex flex-col rounded-bl-3xl rounded-br-md rounded-tl-md rounded-tr-3xl bg-gray-200 p-5">
       <div className="flex h-[90px] w-full items-center justify-center">
         <img src={image} alt="" className="absolute -top-[30px] w-[120px]" />
       </div>
@@ -30,7 +30,7 @@ const CardItem: React.FC<CardItemProps> = ({ coffee }) => {
         ))}
       </div>
 
-      <div className="flex flex-col space-y-3 ">
+      <div className="flex flex-col space-y-3">
         <h2 className="text-center font-baloo_2 text-2xl font-bold text-gray-800">
           {name}
         </h2>
