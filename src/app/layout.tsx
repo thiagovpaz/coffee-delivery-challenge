@@ -4,6 +4,8 @@ import { Baloo_2, Roboto } from 'next/font/google';
 
 import './globals.css';
 
+import { Header } from '@/components/Header';
+
 const roboto = Roboto({
   weight: ['100', '400'],
   subsets: ['latin'],
@@ -31,7 +33,10 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} ${baloo.variable} ${roboto.className}`}
       >
-        {children}
+        <div className="max-w-[1440px]">
+          <Header />
+          {children}
+        </div>
       </body>
     </html>
   );
