@@ -12,6 +12,8 @@ import {
 
 import { Input } from '@/components/Input';
 import { Counter } from '@/components/Counter';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { removeItem } from '@/store/cart/reducer';
 
 type PaymentFormType = {
   id: number;
@@ -38,7 +40,17 @@ export default function Checkout() {
     },
   ];
 
-  const items = [{ id: 1 }, { id: 2 }, { id: 3 }];
+  const dispatch = useAppDispatch();
+  const items = useAppSelector((state) => state.cart.items);
+
+  const calculateTotalCart = items.reduce(
+    (partial, i) => partial + i.qty * i.product.price,
+    0,
+  );
+
+  const handleRemoveFromCart = (product_id: number) => {
+    dispatch(removeItem(product_id));
+  };
 
   return (
     <div className="flex flex-1 gap-8 p-8 px-2">
@@ -106,23 +118,32 @@ export default function Checkout() {
 
           <div className="rounded-bl-[45px] rounded-br-md rounded-tl-md rounded-tr-[45px] bg-gray-200 p-10">
             <div className="flex flex-col space-y-3">
+              {items.length === 0 && <div>Carrinho Vazio</div>}
               {items.map((i) => (
                 <div
-                  key={i.id}
+                  key={i.product.id}
                   className="flex items-center gap-8 border border-b-gray-400 px-4 py-3"
                 >
                   <div className="w-16">
-                    <img src="/images/coffee_1.png" alt="" />
+                    <img src={`/images/coffee_${i.product.id}.png`} alt="" />
                   </div>
                   <div className="flex flex-1 flex-col">
                     <div className="flex items-center justify-between">
-                      <span className="mb-2">Expresso</span>
+                      <span className="mb-2">{i.product.name}</span>
 
-                      <span className="font-bold">R$ 9,90</span>
+                      <span className="font-bold">
+                        {new Intl.NumberFormat('pt-BR', {
+                          style: 'currency',
+                          currency: 'BRL',
+                        }).format(i.qty * i.product.price)}
+                      </span>
                     </div>
                     <div className="flex gap-4">
                       <Counter />
-                      <button className="flex items-center justify-center gap-2 rounded-md bg-gray-400 px-2 text-sm uppercase">
+                      <button
+                        onClick={() => handleRemoveFromCart(i.product.id)}
+                        className="flex items-center justify-center gap-2 rounded-md bg-gray-400 px-2 text-sm uppercase"
+                      >
                         <Trash size={18} className="text-purple-500" />
                         Remover
                       </button>
@@ -135,19 +156,32 @@ export default function Checkout() {
             <div className="mt-3 flex flex-col space-y-2">
               <div className="flex items-center justify-between text-gray-700">
                 <div>Total de Itens</div>
-                <div>R$ 29,70</div>
+                <div>
+                  {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  }).format(calculateTotalCart)}
+                </div>
               </div>
               <div className="flex items-center justify-between text-gray-700">
                 <div>Entrega</div>
-                <div>R$ 29,70</div>
+                <div>R$ 0,00</div>
               </div>
               <div className="flex items-center justify-between text-2xl font-bold">
                 <div>Total</div>
-                <div>R$ 29,70</div>
+                <div>
+                  {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  }).format(calculateTotalCart)}
+                </div>
               </div>
             </div>
 
-            <button className="mt-3 w-full rounded-md bg-yellow-500 p-3 font-bold uppercase text-white">
+            <button
+              disabled={items.length === 0}
+              className="mt-3 w-full rounded-md bg-yellow-500 p-3 font-bold uppercase text-white disabled:cursor-not-allowed disabled:opacity-50"
+            >
               confirmar pedido
             </button>
           </div>
