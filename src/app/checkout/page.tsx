@@ -1,6 +1,6 @@
 'use client';
 
-import { ElementType } from 'react';
+import { ElementType, useEffect } from 'react';
 import {
   Bank,
   CreditCard,
@@ -14,12 +14,7 @@ import { Input } from '@/components/Input';
 import { Counter } from '@/components/Counter';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { removeItem } from '@/store/cart/reducer';
-
-type PaymentFormType = {
-  id: number;
-  name: string;
-  icon: ElementType;
-};
+import { CounterProvider } from '@/hooks/counter';
 
 export default function Checkout() {
   const payment_form = [
@@ -119,37 +114,37 @@ export default function Checkout() {
           <div className="rounded-bl-[45px] rounded-br-md rounded-tl-md rounded-tr-[45px] bg-gray-200 p-10">
             <div className="flex flex-col space-y-3">
               {items.length === 0 && <div>Carrinho Vazio</div>}
-              {items.map((i) => (
-                <div
-                  key={i.product.id}
-                  className="flex items-center gap-8 border border-b-gray-400 px-4 py-3"
-                >
-                  <div className="w-16">
-                    <img src={`/images/coffee_${i.product.id}.png`} alt="" />
-                  </div>
-                  <div className="flex flex-1 flex-col">
-                    <div className="flex items-center justify-between">
-                      <span className="mb-2">{i.product.name}</span>
 
-                      <span className="font-bold">
-                        {new Intl.NumberFormat('pt-BR', {
-                          style: 'currency',
-                          currency: 'BRL',
-                        }).format(i.qty * i.product.price)}
-                      </span>
+              {items.map((i) => (
+                <CounterProvider key={i.product.id}>
+                  <div className="flex items-center gap-8 border border-b-gray-400 px-4 py-3">
+                    <div className="w-16">
+                      <img src={`/images/coffee_${i.product.id}.png`} alt="" />
                     </div>
-                    <div className="flex gap-4">
-                      <Counter />
-                      <button
-                        onClick={() => handleRemoveFromCart(i.product.id)}
-                        className="flex items-center justify-center gap-2 rounded-md bg-gray-400 px-2 text-sm uppercase"
-                      >
-                        <Trash size={18} className="text-purple-500" />
-                        Remover
-                      </button>
+                    <div className="flex flex-1 flex-col">
+                      <div className="flex items-center justify-between">
+                        <span className="mb-2">{i.product.name}</span>
+
+                        <span className="font-bold">
+                          {new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL',
+                          }).format(i.qty * i.product.price)}
+                        </span>
+                      </div>
+                      <div className="flex gap-4">
+                        <Counter initialValue={i.qty} />
+                        <button
+                          onClick={() => handleRemoveFromCart(i.product.id)}
+                          className="flex items-center justify-center gap-2 rounded-md bg-gray-400 px-2 text-sm uppercase"
+                        >
+                          <Trash size={18} className="text-purple-500" />
+                          Remover
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </CounterProvider>
               ))}
             </div>
 

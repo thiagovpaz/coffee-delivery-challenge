@@ -8,6 +8,7 @@ import { CardItemShimmer } from '@/components/shimmer/CardItem';
 
 import { useAppDispatch, useAppSelector } from '@/store';
 import { getProductsAction } from '@/store/product/actions';
+import { CounterProvider } from '@/hooks/counter';
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -31,7 +32,9 @@ export default function Home() {
         </h2>
         <div className="mt-10 grid grid-cols-4 gap-10 max-md:grid-cols-1">
           {products.map((i) => (
-            <CardItem key={i.id} coffee={i} />
+            <CounterProvider key={i.id}>
+              <CardItem coffee={i} />
+            </CounterProvider>
           ))}
 
           {loading &&

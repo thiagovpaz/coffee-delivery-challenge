@@ -20,7 +20,7 @@ export const checkProductStockAction = createAsyncThunk(
         return rejectWithValue('Quantidade indisponível');
       }
 
-      return response.data;
+      return { product: response.data, qty };
     } catch (err: unknown) {
       return rejectWithValue(err);
     }

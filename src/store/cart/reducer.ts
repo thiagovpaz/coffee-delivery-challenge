@@ -24,7 +24,7 @@ export const cartSlice = createSlice({
       .addCase(checkProductStockAction.fulfilled, (state, { payload }) => {
         state.loading = false;
 
-        const product_id = payload.id;
+        const product_id = payload.product.id;
 
         const productInCartIndex = state.items.findIndex(
           (item) => item.product.id === product_id,
@@ -34,8 +34,8 @@ export const cartSlice = createSlice({
           state.items[productInCartIndex].qty++;
         } else {
           state.items.push({
-            product: payload,
-            qty: 1,
+            product: payload.product,
+            qty: payload.qty || 1,
           });
         }
       })

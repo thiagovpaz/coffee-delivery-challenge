@@ -6,7 +6,7 @@
       "description": "O tradicional café feito com água quente e grãos moídos",
       "categories": ["tradicional"],
       "price": 9.9,
-      "qty": 100
+      "qty": 2
     },
     {
       "id": 2,

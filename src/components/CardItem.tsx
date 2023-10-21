@@ -1,12 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ShoppingCart } from 'phosphor-react';
 
 import { IProduct } from '@/store/product/types';
 import { Counter } from '@/components/Counter';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { checkProductStockAction } from '@/store/cart/actions';
+import { useCounter } from '@/hooks/counter';
 
 interface CardItemProps {
   coffee: IProduct;
@@ -15,12 +16,17 @@ interface CardItemProps {
 const CardItem: React.FC<CardItemProps> = ({ coffee }) => {
   const { id, image, categories, name, description, price } = coffee;
 
+  const { counter } = useCounter();
+
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.cart.loading);
 
-  const handleAddToCart = async (id: number, qty: number) => {
-    dispatch(checkProductStockAction({ id, qty }));
-  };
+  const handleAddToCart = useCallback(
+    async (id: number, qty: number) => {
+      dispatch(checkProductStockAction({ id, qty }));
+    },
+    [dispatch],
+  );
 
   return (
     <div className="relative flex h-fit flex-col rounded-bl-3xl rounded-br-md rounded-tl-md rounded-tr-3xl bg-gray-200 p-5">
@@ -67,7 +73,7 @@ const CardItem: React.FC<CardItemProps> = ({ coffee }) => {
 
         <button
           disabled={loading}
-          onClick={() => handleAddToCart(id, 1)}
+          onClick={() => handleAddToCart(id, counter)}
           className="flex h-10 w-10 items-center justify-center rounded-md bg-purple-900 disabled:bg-gray-500"
         >
           <ShoppingCart weight="fill" className="fill-white" size={22} />
