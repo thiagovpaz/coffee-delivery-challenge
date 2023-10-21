@@ -4,6 +4,7 @@ import { Baloo_2, Roboto } from 'next/font/google';
 
 import './globals.css';
 
+import { Providers } from '@/lib/providers';
 import { Header } from '@/components/Header';
 
 const roboto = Roboto({
@@ -29,15 +30,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt">
-      <body
-        className={`${roboto.variable} ${baloo.variable} ${roboto.className}`}
-      >
-        <div className="mx-auto max-w-[1440px]">
-          <Header />
-          {children}
-        </div>
-      </body>
-    </html>
+    <Providers>
+      <html lang="pt">
+        <body
+          className={`${roboto.variable} ${baloo.variable} ${roboto.className}`}
+        >
+          <div className="mx-auto max-w-[1440px]">
+            <Header />
+            {children}
+          </div>
+        </body>
+      </html>
+    </Providers>
   );
 }

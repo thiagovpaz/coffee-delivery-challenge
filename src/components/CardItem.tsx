@@ -1,22 +1,41 @@
 'use client';
 
-import React from 'react';
-import { Minus, Plus, ShoppingCart } from 'phosphor-react';
+import React, { useCallback } from 'react';
+import { ShoppingCart } from 'phosphor-react';
 
-import { CoffeeType } from '@/types/coffee';
+import { IProduct } from '@/store/product/types';
 import { Counter } from '@/components/Counter';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { checkProductStockAction } from '@/store/cart/actions';
+import { useCounter } from '@/hooks/counter';
 
 interface CardItemProps {
-  coffee: CoffeeType;
+  coffee: IProduct;
 }
 
 const CardItem: React.FC<CardItemProps> = ({ coffee }) => {
-  const { image, categories, name, description, price } = coffee;
+  const { id, image, categories, name, description, price } = coffee;
+
+  const { counter } = useCounter();
+
+  const dispatch = useAppDispatch();
+  const loading = useAppSelector((state) => state.cart.loading);
+
+  const handleAddToCart = useCallback(
+    async (id: number, qty: number) => {
+      dispatch(checkProductStockAction({ id, qty }));
+    },
+    [dispatch],
+  );
 
   return (
-    <div className="relative flex flex-col rounded-bl-3xl rounded-br-md rounded-tl-md rounded-tr-3xl bg-gray-200 p-5">
+    <div className="relative flex h-fit flex-col rounded-bl-3xl rounded-br-md rounded-tl-md rounded-tr-3xl bg-gray-200 p-5">
       <div className="flex h-[90px] w-full items-center justify-center">
-        <img src={image} alt="" className="absolute -top-[30px] w-[120px]" />
+        <img
+          src={`/images/coffee_${coffee.id}.png`}
+          alt=""
+          className="absolute -top-[30px] w-[120px]"
+        />
       </div>
 
       <div className="flex justify-center gap-2">
@@ -52,7 +71,11 @@ const CardItem: React.FC<CardItemProps> = ({ coffee }) => {
 
         <Counter />
 
-        <button className="flex h-10 w-10 items-center justify-center rounded-md bg-purple-900">
+        <button
+          disabled={loading}
+          onClick={() => handleAddToCart(id, counter)}
+          className="flex h-10 w-10 items-center justify-center rounded-md bg-purple-900 disabled:bg-gray-500"
+        >
           <ShoppingCart weight="fill" className="fill-white" size={22} />
         </button>
       </div>
